@@ -16,11 +16,10 @@ const doctorRoutes = require('./routes/doctors');
 const slotRoutes = require('./routes/slots');
 const appointmentRoutes = require('./routes/appointments');
 const vitalsRoutes = require('./routes/vitals');
-const patientRoutes = require('/routes/patients');
+const patientRoutes = require('./routes/patients');
 const prescriptionRoutes = require('./routes/prescriptions');
 const scanRoutes = require('./routes/scan');
 const voiceRoutes = require('./routes/voice');
-const webhookRoutes = require('./routes/webhook');
 
 const app = express();
 const server = http.createServer(app);
@@ -87,7 +86,15 @@ app.use('/api/patients', patientRoutes);
 app.use('/api/prescriptions', prescriptionRoutes);
 app.use('/api/scan', scanRoutes);
 app.use('/api/voice', voiceRoutes);
-app.use('/api/webhook', webhookRoutes);
+
+// Health check
+app.get('/health', (_req, res) => {
+  res.json({
+    status: 'OK',
+    timestamp: new Date(),
+    environment: process.env.NODE_ENV || 'development',
+  });
+});
 
 // Error handler
 app.use((err, _req, res, _next) => {
